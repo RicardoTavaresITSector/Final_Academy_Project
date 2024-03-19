@@ -4,10 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
     android:background="@color/LigthBlue"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/DarkBlue"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="@string/main_name"
+        android:titleTextColor="@android:color/white"/>
 
     <SearchView
         android:id="@+id/searchView"
@@ -19,8 +28,8 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/searchview_bg"
         android:iconifiedByDefault="false"
-        android:queryHint="Pesquisar Pokémon..."
-        app:queryBackground="@android:color/transparent"/>
+        android:queryHint="@string/pesquisar_pokemon"
+        app:queryBackground="@android:color/transparent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPokemonList"

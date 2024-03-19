@@ -10,6 +10,7 @@
 
     public class Pokemon {
         private int id;
+        private String url;
         private String name;
         @SerializedName("sprites")
         private JsonObject sprites;
@@ -56,11 +57,7 @@
         }
 
         public String getImg() {
-            if (sprites != null && sprites.has("front_default")) {
-                return sprites.get("front_default").getAsString();
-            } else {
-                return null;
-            }
+            return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
         }
 
         public void setImg(String img) {
@@ -115,5 +112,13 @@
 
         public void setMoves(JsonArray moves) {
             this.moves = moves;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
