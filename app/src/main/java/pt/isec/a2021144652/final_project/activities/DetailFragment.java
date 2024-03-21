@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class DetailFragment extends Fragment {
-
+    LinearLayout llTypes;
     ImageView ivPokemonDetailImage;
     TextView tvDetailPokemonName;
     TextView tvWeight;
@@ -51,7 +52,8 @@ public class DetailFragment extends Fragment {
         tvDetailPokemonName = view.findViewById(R.id.tvDetailPokemonName);
         tvWeight = view.findViewById(R.id.tvWeight);
         tvHeight = view.findViewById(R.id.tvHeight);
-        tvTypes = view.findViewById(R.id.tvTypes);
+        llTypes = view.findViewById(R.id.llTypes);
+        llTypes.removeAllViews();
 
         Bundle args = getArguments();
         if (args != null) {
@@ -73,7 +75,21 @@ public class DetailFragment extends Fragment {
                             tvDetailPokemonName.setText(pokemon.getName());
                             tvWeight.setText(pokemon.getWeight() + "kg");
                             tvHeight.setText(pokemon.getHeight() + "m");
-                            tvTypes.setText(pokemon.getTypes().toString());
+                            for (String type : pokemon.getTypes()) {
+                                ImageView imageView = new ImageView(getContext());
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                                        ViewGroup.LayoutParams.WRAP_CONTENT
+                                );
+                                layoutParams.setMargins(0, 0, 2, 0);
+                                imageView.setLayoutParams(layoutParams);
+
+                                int drawableResId = getResourceIdForType(type);
+                                if (drawableResId != 0) {
+                                    imageView.setImageResource(drawableResId);
+                                    llTypes.addView(imageView);
+                                }
+                            }
 
                             String imageUrl = pokemon.getImg();
                             Glide.with(DetailFragment.this)
@@ -94,5 +110,50 @@ public class DetailFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private int getResourceIdForType(String type) {
+        switch (type) {
+            case "normal":
+                return R.drawable.type_normal;
+            case "bug":
+                return R.drawable.type_bug;
+            case "fighting":
+                return R.drawable.type_fighting;
+            case "flying":
+                return R.drawable.type_flying;
+            case "ghost":
+                return R.drawable.type_ghost;
+            case "poison":
+                return R.drawable.type_poison;
+            case "ground":
+                return R.drawable.type_ground;
+            case "rock":
+                return R.drawable.type_rock;
+            case "steel":
+                return R.drawable.type_steel;
+            case "fire":
+                return R.drawable.type_fire;
+            case "water":
+                return R.drawable.type_water;
+            case "grass":
+                return R.drawable.type_grass;
+            case "electric":
+                return R.drawable.type_electric;
+            case "psychic":
+                return R.drawable.type_psychic;
+            case "ice":
+                return R.drawable.type_ice;
+            case "dragon":
+                return R.drawable.type_dragon;
+            case "dark":
+                return R.drawable.type_dark;
+            case "fairy":
+                return R.drawable.type_fairy;
+            case "shadow":
+                return R.drawable.type_shadow;
+            default:
+                return R.drawable.pokeball;
+        }
     }
 }

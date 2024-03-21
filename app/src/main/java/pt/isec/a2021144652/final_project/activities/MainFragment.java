@@ -72,7 +72,7 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
                     PokemonResponse pokemonResponse = response.body();
                     if (pokemonResponse != null) {
                         pokemons = pokemonResponse.getResults();
-                        filteredPokemons = new ArrayList<>(pokemons); // Inicializa a lista de pokemons filtrados
+                        filteredPokemons = new ArrayList<>(pokemons);
                         myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
                         rvPokemons.setAdapter(myAdapter);
                     }
@@ -115,7 +115,7 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
 
     @Override
     public void onItemClicked(int position) {
-        String url = pokemons.get(position).getUrl();
+        String url = filteredPokemons.get(position).getUrl();
         String[] parts = url.split("/");
         String id = parts[parts.length - 1];
 
