@@ -15,18 +15,18 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import pt.isec.a2021144652.final_project.R;
-import pt.isec.a2021144652.final_project.activities.MainActivity;
-import pt.isec.a2021144652.final_project.models.Pokemon;
+import pt.isec.a2021144652.final_project.activities.MainFragment;
+import pt.isec.a2021144652.final_project.models.PokemonList;
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder>{
-    private ArrayList<Pokemon> pokemons;
+    private ArrayList<PokemonList> pokemons;
     private ItemClicked activity;
 
     public interface ItemClicked {
         void onItemClicked(int position);
     }
 
-    public PokemonAdapter (Context context, ArrayList<Pokemon> pokemons){
+    public PokemonAdapter (MainFragment context, ArrayList<PokemonList> pokemons){
         this.pokemons = pokemons;
         activity = (ItemClicked) context;
     }
@@ -45,7 +45,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    activity.onItemClicked(pokemons.indexOf((Pokemon) v.getTag()));
+                    activity.onItemClicked(pokemons.indexOf((PokemonList) v.getTag()));
                 }
             });
         }
