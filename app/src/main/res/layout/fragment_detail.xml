@@ -76,13 +76,13 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/llTypes"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTypes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                    </LinearLayout>
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/list_type_image" />
 
                     <TextView
                         android:layout_width="match_parent"

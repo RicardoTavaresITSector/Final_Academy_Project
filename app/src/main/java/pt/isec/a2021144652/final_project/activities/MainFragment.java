@@ -2,6 +2,7 @@ package pt.isec.a2021144652.final_project.activities;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
@@ -41,9 +42,9 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
     List<PokemonList> filteredPokemons;
     private static final String LIMIT = "151";
     private static final String OFFSET = "1";
+    private boolean dataLoaded = false;
 
     public MainFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -58,6 +59,29 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
         layoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
         rvPokemons.setLayoutManager(layoutManager);
 
+        if (!dataLoaded) {
+            loadData();
+        } else {
+            setupRecyclerView();
+        }
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
+
+        return view;
+    }
+
+    private void loadData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pokeapi.co/api/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -75,6 +99,7 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
                         filteredPokemons = new ArrayList<>(pokemons);
                         myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
                         rvPokemons.setAdapter(myAdapter);
+                        dataLoaded = true; // Defina dataLoaded como true após carregar os dados
                     }
                 } else {
                     Toast.makeText(getContext(), "Erro ao carregar pokémons", Toast.LENGTH_SHORT).show();
@@ -86,21 +111,11 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
                 Toast.makeText(getContext(), "Erro ao carregar pokémons", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filter(newText);
-                return true;
-            }
-        });
-
-        return view;
+    private void setupRecyclerView() {
+        myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
+        rvPokemons.setAdapter(myAdapter);
     }
 
     private void filter(String text) {
