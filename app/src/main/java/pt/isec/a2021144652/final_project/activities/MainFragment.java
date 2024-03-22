@@ -99,7 +99,7 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
                         filteredPokemons = new ArrayList<>(pokemons);
                         myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
                         rvPokemons.setAdapter(myAdapter);
-                        dataLoaded = true; // Defina dataLoaded como true após carregar os dados
+                        dataLoaded = true;
                     }
                 } else {
                     Toast.makeText(getContext(), "Erro ao carregar pokémons", Toast.LENGTH_SHORT).show();
