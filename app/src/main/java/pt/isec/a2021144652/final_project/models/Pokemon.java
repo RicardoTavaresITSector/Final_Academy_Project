@@ -1,5 +1,8 @@
     package pt.isec.a2021144652.final_project.models;
 
+    import androidx.room.Entity;
+    import androidx.room.PrimaryKey;
+
     import com.google.gson.JsonArray;
     import com.google.gson.JsonElement;
     import com.google.gson.JsonObject;

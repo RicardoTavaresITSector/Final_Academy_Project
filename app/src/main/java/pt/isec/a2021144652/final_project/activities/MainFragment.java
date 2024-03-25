@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
@@ -16,6 +19,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.widget.SearchView;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import pt.isec.a2021144652.final_project.R;
 
 public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked {
+    Toolbar toolbar;
     RecyclerView rvPokemons;
     RecyclerView.Adapter myAdapter;
     SearchView searchView;
@@ -48,9 +54,37 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    private void openFavoritesPage() {
+        FavoriteFragment favoriteFragment = new FavoriteFragment();
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.fragment_container, favoriteFragment);
+
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        toolbar = view.findViewById(R.id.main_toolbar);
+        setHasOptionsMenu(true);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_favorite) {
+                openFavoritesPage();
+                return true;
+            }
+            return false;
+        });
+        toolbar.inflateMenu(R.menu.menu_items);
 
         rvPokemons = view.findViewById(R.id.rvPokemonList);
         searchView = view.findViewById(R.id.searchView);
