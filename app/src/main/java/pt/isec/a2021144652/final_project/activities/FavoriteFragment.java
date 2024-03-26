@@ -1,13 +1,16 @@
 package pt.isec.a2021144652.final_project.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +28,6 @@ import pt.isec.a2021144652.final_project.models.FavoritePokemon;
 import pt.isec.a2021144652.final_project.room.AppDatabase;
 import pt.isec.a2021144652.final_project.room.FavoritePokemonDao;
 import pt.isec.a2021144652.final_project.room.PokemonViewModel;
-
 
 public class FavoriteFragment extends Fragment {
     Toolbar favotitePokemonsToolbar;
@@ -60,7 +62,11 @@ public class FavoriteFragment extends Fragment {
             }
         });
         recyclerView = view.findViewById(R.id.recyclerViewFavoritePokemon);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2, LinearLayoutManager.VERTICAL, false));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
         adapter = new FavoritePokemonsAdapter(new ArrayList<>(), viewModel);
         recyclerView.setAdapter(adapter);
 
@@ -72,5 +78,15 @@ public class FavoriteFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2, LinearLayoutManager.VERTICAL, false));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
     }
 }

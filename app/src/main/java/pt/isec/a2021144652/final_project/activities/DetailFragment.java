@@ -3,10 +3,15 @@ package pt.isec.a2021144652.final_project.activities;
 import static kotlinx.coroutines.CoroutineScopeKt.CoroutineScope;
 import static pt.isec.a2021144652.final_project.MyApplication.appDatabase;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,7 +47,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import pt.isec.a2021144652.final_project.room.AppDatabase;
 
-
 public class DetailFragment extends Fragment {
     Pokemon auxPokemon;
     private PokemonViewModel pokemonViewModel;
@@ -76,6 +80,9 @@ public class DetailFragment extends Fragment {
         tvWeight = view.findViewById(R.id.tvWeight);
         tvHeight = view.findViewById(R.id.tvHeight);
         detailsToolbar = view.findViewById(R.id.detailsToolbar);
+        ivFavorite = view.findViewById(R.id.ivFavorite);
+        rvTypes = view.findViewById(R.id.rvTypes);
+        rvMoves = view.findViewById(R.id.rvMoves);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(detailsToolbar);
         if (((AppCompatActivity) requireActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) requireActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -86,91 +93,109 @@ public class DetailFragment extends Fragment {
                 requireActivity().onBackPressed();
             }
         });
-        ivFavorite = view.findViewById(R.id.ivFavorite);
-        rvTypes = view.findViewById(R.id.rvTypes);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTypes.setLayoutManager(layoutManager);
-
-        rvMoves = view.findViewById(R.id.rvMoves);
         LinearLayoutManager movesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvMoves.setLayoutManager(movesLayoutManager);
 
         Bundle args = getArguments();
         if (args != null) {
             String pokemonId = args.getString("pokemon_id");
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://pokeapi.co/api/v2/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            ApiService apiService = retrofit.create(ApiService.class);
-            Call<Pokemon> pokemonCall = apiService.getPokemon(pokemonId);
-            pokemonCall.enqueue(new Callback<Pokemon>() {
-                @Override
-                public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
-                    if (response.isSuccessful()) {
-                        auxPokemon = response.body();
-                        if(auxPokemon != null) {
-                            tvDetailPokemonName.setText(auxPokemon.getName());
-                            tvWeight.setText(auxPokemon.getWeight() + "kg");
-                            tvHeight.setText(auxPokemon.getHeight() + "m");
-                            List<String> types = auxPokemon.getTypes();
-                            typeAdapter = new TypeAdapter(types);
-                            rvTypes.setAdapter(typeAdapter);
-                            List<String> moves = auxPokemon.getMoves();
-                            moveAdapter = new MovesAdapter(moves);
-                            rvMoves.setAdapter(moveAdapter);
-
-                            String imageUrl = auxPokemon.getImg();
-                            Glide.with(DetailFragment.this)
-                                    .load(imageUrl)
-                                    .into(ivPokemonDetailImage);
-
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Pokemon> call, Throwable t) {
-                    Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            pokemonViewModel.getPokemonById(pokemonId).observe(getViewLifecycleOwner(), pokemon -> {
-                if (pokemon != null) {
-                    ivFavorite.setColorFilter(getResources().getColor(R.color.Gold));
-                } else {
-                    ivFavorite.setColorFilter(null);
-                }
-
-                ivFavorite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (pokemon != null) {
-                            pokemonViewModel.removePokemonFromFavorites(Integer.parseInt(pokemonId));
-                            ivFavorite.setColorFilter(null);
-                            Toast.makeText(getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Adicionar o Pokémon à base de dados
-                            String pokemonName = auxPokemon.getName();
-                            String imageUrl = auxPokemon.getImg();
-                            String height = auxPokemon.getHeight();
-                            String weight = auxPokemon.getWeight();
-                            List<String> types = auxPokemon.getTypes();
-                            List<String> moves = auxPokemon.getMoves();
-
-                            pokemonViewModel.addPokemonToFavorites(Integer.parseInt(pokemonId), pokemonName, imageUrl, height, weight, types, moves);
-                            ivFavorite.setColorFilter(getResources().getColor(R.color.Gold));
-                            Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            });
+            loadPokemonDetails(pokemonId);
+            verifyIfPokemonIsFavorite(pokemonId);
         }
 
         return view;
+    }
+
+    private void loadPokemonDetails(String pokemonId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pokeapi.co/api/v2/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<Pokemon> pokemonCall = apiService.getPokemon(pokemonId);
+        pokemonCall.enqueue(new Callback<Pokemon>() {
+            @Override
+            public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
+                if (response.isSuccessful()) {
+                    auxPokemon = response.body();
+                    if(auxPokemon != null) {
+                        tvDetailPokemonName.setText(auxPokemon.getName());
+                        tvWeight.setText(auxPokemon.getWeight() + "kg");
+                        tvHeight.setText(auxPokemon.getHeight() + "m");
+                        List<String> types = auxPokemon.getTypes();
+                        typeAdapter = new TypeAdapter(types);
+                        rvTypes.setAdapter(typeAdapter);
+                        List<String> moves = auxPokemon.getMoves();
+                        moveAdapter = new MovesAdapter(moves);
+                        rvMoves.setAdapter(moveAdapter);
+
+                        String imageUrl = auxPokemon.getImg();
+                        Glide.with(DetailFragment.this)
+                                .load(imageUrl)
+                                .into(ivPokemonDetailImage);
+
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pokemon> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void verifyIfPokemonIsFavorite(String pokemonId) {
+        pokemonViewModel.getPokemonById(pokemonId).observe(getViewLifecycleOwner(), pokemon -> {
+            if (pokemon != null) {
+                ivFavorite.setColorFilter(getResources().getColor(R.color.Gold));
+            } else {
+                ivFavorite.setColorFilter(null);
+            }
+
+            ivFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (pokemon != null) {
+                        pokemonViewModel.removePokemonFromFavorites(Integer.parseInt(pokemonId));
+                        ivFavorite.setColorFilter(null);
+                        Toast.makeText(getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Adicionar o Pokémon à base de dados
+                        String pokemonName = auxPokemon.getName();
+                        String imageUrl = auxPokemon.getImg();
+                        String height = auxPokemon.getHeight();
+                        String weight = auxPokemon.getWeight();
+                        List<String> types = auxPokemon.getTypes();
+                        List<String> moves = auxPokemon.getMoves();
+
+                        pokemonViewModel.addPokemonToFavorites(Integer.parseInt(pokemonId), pokemonName, imageUrl, height, weight, types, moves);
+                        ivFavorite.setColorFilter(getResources().getColor(R.color.Gold));
+                        Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        });
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        DetailFragment detailFragment = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putString("pokemon_id", String.valueOf(auxPokemon.getId()));
+        detailFragment.setArguments(args);
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.fragment_container, detailFragment);
+
+        transaction.commit();
     }
 }

@@ -7,6 +7,7 @@
     tools:context=".activities.DetailFragment">
 
     <LinearLayout
+        android:id="@+id/fragment_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/LigthBlue"
@@ -61,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="7dp"
                 android:gravity="center_horizontal"
-                android:text="Pokemon Name"
+                android:text="@string/pokemon_name"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -146,7 +147,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Moves"
+                    android:text="@string/moves"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

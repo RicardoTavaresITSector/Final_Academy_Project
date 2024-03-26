@@ -1,11 +1,14 @@
 package pt.isec.a2021144652.final_project.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -90,7 +94,9 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
         searchView = view.findViewById(R.id.searchView);
 
         rvPokemons.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
+
+        int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
+        layoutManager = new GridLayoutManager(getContext(), columns, GridLayoutManager.VERTICAL, false);
         rvPokemons.setLayoutManager(layoutManager);
 
         if (!dataLoaded) {
@@ -153,13 +159,17 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
     }
 
     private void filter(String text) {
-        filteredPokemons.clear();
-        for (PokemonList pokemon : pokemons) {
-            if (pokemon.getName().toLowerCase().contains(text.toLowerCase())) {
-                filteredPokemons.add(pokemon);
+        if (filteredPokemons == null) {
+            filteredPokemons = new ArrayList<>();
+        } else {
+            filteredPokemons.clear();
+            for (PokemonList pokemon : pokemons) {
+                if (pokemon.getName().toLowerCase().contains(text.toLowerCase())) {
+                    filteredPokemons.add(pokemon);
+                }
             }
+            myAdapter.notifyDataSetChanged();
         }
-        myAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -181,5 +191,16 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
         transaction.addToBackStack(null);
 
         transaction.commit();
+    }
+
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            rvPokemons.setLayoutManager(new GridLayoutManager(getContext(), 4, GridLayoutManager.VERTICAL, false));
+        } else {
+            rvPokemons.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
+        }
     }
 }
