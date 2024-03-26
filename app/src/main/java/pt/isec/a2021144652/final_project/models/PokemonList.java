@@ -5,9 +5,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "pokemon_list_table")
 public class PokemonList {
-    @PrimaryKey
     private int id;
     private String name;
     private String url;
