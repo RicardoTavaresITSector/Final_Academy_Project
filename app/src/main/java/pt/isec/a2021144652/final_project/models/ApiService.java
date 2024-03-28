@@ -11,4 +11,6 @@ public interface ApiService {
     @GET("pokemon")
     Call<PokemonResponse> getPokemons(@Query("limit") int limit);
 
+    @GET("pokemon")
+    Call<PokemonResponse> getSomePokemons(@Query("limit") int limit, @Query("offset") int offset);
 }

@@ -182,20 +182,4 @@ public class DetailFragment extends Fragment {
             });
         });
     }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString("pokemon_id", String.valueOf(auxPokemon.getId()));
-        detailFragment.setArguments(args);
-
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-        transaction.replace(R.id.fragment_container, detailFragment);
-
-        transaction.commit();
-    }
 }

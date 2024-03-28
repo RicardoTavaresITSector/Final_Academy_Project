@@ -43,6 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import pt.isec.a2021144652.final_project.R;
 
 public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked {
+    boolean isLoading = false;
     Toolbar toolbar;
     RecyclerView rvPokemons;
     RecyclerView.Adapter myAdapter;
@@ -60,6 +61,7 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     private void openFavoritesPage() {
@@ -91,13 +93,36 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
         toolbar.inflateMenu(R.menu.menu_items);
 
         rvPokemons = view.findViewById(R.id.rvPokemonList);
-        searchView = view.findViewById(R.id.searchView);
-
         rvPokemons.setHasFixedSize(true);
+        searchView = view.findViewById(R.id.searchView);
+        pokemons = new ArrayList<>();
+        filteredPokemons = new ArrayList<>();
 
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 4 : 2;
         layoutManager = new GridLayoutManager(getContext(), columns, GridLayoutManager.VERTICAL, false);
         rvPokemons.setLayoutManager(layoutManager);
+
+        // Mantenha o OnScrollListener enquanto define o adaptador
+        rvPokemons.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount) {
+                    // Chegou ao final da lista, carregar mais dados
+                    loadData();
+                    isLoading = true;
+                }
+            }
+        });
+
+        // Inicialize o adaptador
+        myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
+        rvPokemons.setAdapter(myAdapter);
 
         if (!dataLoaded) {
             loadData();
@@ -122,24 +147,29 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
     }
 
     private void loadData() {
+        int limit = 151;
+        int offset = pokemons.size(); // Pegar a quantidade atual de Pokémons carregados como offset
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pokeapi.co/api/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        Call<PokemonResponse> call = apiService.getPokemons(151);
+        Call<PokemonResponse> call = apiService.getSomePokemons(limit, offset);
         call.enqueue(new Callback<PokemonResponse>() {
             @Override
             public void onResponse(Call<PokemonResponse> call, Response<PokemonResponse> response) {
                 if (response.isSuccessful()) {
                     PokemonResponse pokemonResponse = response.body();
                     if (pokemonResponse != null) {
-                        pokemons = pokemonResponse.getResults();
-                        filteredPokemons = new ArrayList<>(pokemons);
-                        myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
-                        rvPokemons.setAdapter(myAdapter);
-                        dataLoaded = true;
+                        // Adicionar os novos Pokémons carregados à lista existente
+                        pokemons.addAll(pokemonResponse.getResults());
+                        // Atualizar a lista filtrada
+                        filteredPokemons.addAll(pokemonResponse.getResults());
+                        // Notificar o adapter sobre as mudanças
+                        myAdapter.notifyDataSetChanged();
+                        isLoading = false;
                     }
                 } else {
                     Toast.makeText(getContext(), "Erro ao carregar pokémons", Toast.LENGTH_SHORT).show();
