@@ -9,7 +9,6 @@ import java.util.List;
 public class FavoritePokemon {
     @PrimaryKey
     private int id;
-    private String url;
     private String name;
     private String img;
     private String height;
@@ -31,63 +30,27 @@ public class FavoritePokemon {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getImg() {
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
     }
 
-    public void setImg(String img) {
-        this.img = img;
-    }
-
     public String getHeight() {
         return height;
-    }
-
-    public void setHeight(String height) {
-        this.height = height;
     }
 
     public String getWeight() {
         return weight;
     }
 
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
     public List<String> getTypes() {
         return types;
     }
 
-    public void setTypes(List<String> types) {
-        this.types = types;
-    }
-
     public List<String> getMoves() {
         return moves;
-    }
-
-    public void setMoves(List<String> moves) {
-        this.moves = moves;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }

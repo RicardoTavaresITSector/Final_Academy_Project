@@ -20,8 +20,7 @@ public class PokemonViewModel extends AndroidViewModel {
         repository = new FavoritePokemonRepository(application);
     }
 
-    public void addPokemonToFavorites(int pokemonId, String name, String imageUrl, String height, String weight, List<String> types, List<String> moves) {
-        FavoritePokemon pokemon = new FavoritePokemon(pokemonId, name, imageUrl, height, weight, types, moves);
+    public void addPokemonToFavorites(FavoritePokemon pokemon) {
         repository.addPokemonToFavorites(pokemon);
     }
 

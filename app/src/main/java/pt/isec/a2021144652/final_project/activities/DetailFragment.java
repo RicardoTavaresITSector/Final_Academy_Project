@@ -174,7 +174,8 @@ public class DetailFragment extends Fragment {
                         List<String> types = auxPokemon.getTypes();
                         List<String> moves = auxPokemon.getMoves();
 
-                        pokemonViewModel.addPokemonToFavorites(Integer.parseInt(pokemonId), pokemonName, imageUrl, height, weight, types, moves);
+                        FavoritePokemon favoritePokemon = new FavoritePokemon(Integer.parseInt(pokemonId), pokemonName, imageUrl, height, weight, types, moves);
+                        pokemonViewModel.addPokemonToFavorites(favoritePokemon);
                         ivFavorite.setColorFilter(getResources().getColor(R.color.Gold));
                         Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
                     }

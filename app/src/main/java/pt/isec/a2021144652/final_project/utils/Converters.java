@@ -8,6 +8,9 @@ import java.util.List;
 public class Converters {
     @TypeConverter
     public static String fromList(List<String> stringList) {
+        if (stringList == null) {
+            return null;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : stringList) {
             stringBuilder.append(s);
@@ -18,6 +21,9 @@ public class Converters {
 
     @TypeConverter
     public static List<String> toList(String data) {
+        if (data == null) {
+            return new ArrayList<>();
+        }
         return new ArrayList<>(Arrays.asList(data.split(",")));
     }
 }

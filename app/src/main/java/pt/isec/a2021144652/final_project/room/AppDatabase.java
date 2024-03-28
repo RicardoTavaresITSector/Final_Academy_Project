@@ -11,7 +11,7 @@ import androidx.room.migration.Migration;
 import pt.isec.a2021144652.final_project.models.FavoritePokemon;
 import pt.isec.a2021144652.final_project.utils.Converters;
 
-@Database(entities = {FavoritePokemon.class}, version = 3, exportSchema = false)
+@Database(entities = {FavoritePokemon.class}, version = 4, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
