@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,7 +31,7 @@ import pt.isec.a2021144652.final_project.room.AppDatabase;
 import pt.isec.a2021144652.final_project.room.FavoritePokemonDao;
 import pt.isec.a2021144652.final_project.room.PokemonViewModel;
 
-public class FavoriteFragment extends Fragment {
+public class FavoriteFragment extends Fragment implements FavoritePokemonsAdapter.ItemClicked {
     Toolbar favotitePokemonsToolbar;
     private PokemonViewModel viewModel;
     private RecyclerView recyclerView;
@@ -67,7 +69,7 @@ public class FavoriteFragment extends Fragment {
         } else {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        adapter = new FavoritePokemonsAdapter(new ArrayList<>(), viewModel);
+        adapter = new FavoritePokemonsAdapter(new ArrayList<>(), viewModel, this);
         recyclerView.setAdapter(adapter);
 
         viewModel.getAllFavoritePokemon().observe(getViewLifecycleOwner(), new Observer<List<FavoritePokemon>>() {
@@ -88,5 +90,24 @@ public class FavoriteFragment extends Fragment {
         } else {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        String id = String.valueOf(adapter.pokemons.get(position).getId());
+
+        DetailFragment detailFragment = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putString("pokemon_id", id);
+        detailFragment.setArguments(args);
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.fragment_container, detailFragment);
+
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 }

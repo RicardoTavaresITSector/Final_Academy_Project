@@ -15,24 +15,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.isec.a2021144652.final_project.R;
-import pt.isec.a2021144652.final_project.activities.MainFragment;
+import pt.isec.a2021144652.final_project.activities.FavoriteFragment;
 import pt.isec.a2021144652.final_project.models.FavoritePokemon;
 import pt.isec.a2021144652.final_project.models.PokemonList;
 import pt.isec.a2021144652.final_project.room.PokemonViewModel;
 
 public class FavoritePokemonsAdapter extends RecyclerView.Adapter<FavoritePokemonsAdapter.FavoritePokemonViewHolder>{
-    private ArrayList<FavoritePokemon> pokemons;
+    public List<FavoritePokemon> pokemons;
     private PokemonViewModel viewModel;
+    private ItemClicked activity;
 
-    public FavoritePokemonsAdapter(List<FavoritePokemon> pokemons, PokemonViewModel viewModel) {
-        this.pokemons = (ArrayList<FavoritePokemon>) pokemons;
+    public interface ItemClicked {
+        void onItemClicked(int position);
+    }
+
+    public FavoritePokemonsAdapter(List<FavoritePokemon> pokemons, PokemonViewModel viewModel, FavoriteFragment activity) {
+        this.pokemons = pokemons;
         this.viewModel = viewModel;
+        this.activity = (ItemClicked) activity;
     }
 
     public void setPokemons(List<FavoritePokemon> pokemons) {
-        this.pokemons = (ArrayList<FavoritePokemon>) pokemons;
+        this.pokemons = pokemons;
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public FavoritePokemonsAdapter.FavoritePokemonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,6 +76,16 @@ public class FavoritePokemonsAdapter extends RecyclerView.Adapter<FavoritePokemo
                     int position = getAdapterPosition();
                     FavoritePokemon pokemon = pokemons.get(position);
                     viewModel.removePokemonFromFavorites(pokemon.getId());
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        activity.onItemClicked(position);
+                    }
                 }
             });
         }

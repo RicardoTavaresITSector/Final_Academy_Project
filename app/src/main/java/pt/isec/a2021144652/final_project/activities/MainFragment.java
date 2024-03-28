@@ -102,7 +102,6 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
         layoutManager = new GridLayoutManager(getContext(), columns, GridLayoutManager.VERTICAL, false);
         rvPokemons.setLayoutManager(layoutManager);
 
-        // Mantenha o OnScrollListener enquanto define o adaptador
         rvPokemons.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -113,14 +112,12 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
                 if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount) {
-                    // Chegou ao final da lista, carregar mais dados
                     loadData();
                     isLoading = true;
                 }
             }
         });
 
-        // Inicialize o adaptador
         myAdapter = new PokemonAdapter(MainFragment.this, (ArrayList<PokemonList>) filteredPokemons);
         rvPokemons.setAdapter(myAdapter);
 
@@ -148,7 +145,7 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
 
     private void loadData() {
         int limit = 151;
-        int offset = pokemons.size(); // Pegar a quantidade atual de Pokémons carregados como offset
+        int offset = pokemons.size();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pokeapi.co/api/v2/")
@@ -163,11 +160,8 @@ public class MainFragment extends Fragment implements PokemonAdapter.ItemClicked
                 if (response.isSuccessful()) {
                     PokemonResponse pokemonResponse = response.body();
                     if (pokemonResponse != null) {
-                        // Adicionar os novos Pokémons carregados à lista existente
                         pokemons.addAll(pokemonResponse.getResults());
-                        // Atualizar a lista filtrada
                         filteredPokemons.addAll(pokemonResponse.getResults());
-                        // Notificar o adapter sobre as mudanças
                         myAdapter.notifyDataSetChanged();
                         isLoading = false;
                     }

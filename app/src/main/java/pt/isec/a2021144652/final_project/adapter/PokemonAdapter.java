@@ -89,7 +89,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         if (position == pokemons.size() - 1 && (position + 1) % 151 == 0) {
             return VIEW_TYPE_LOADING; // Último elemento divisível por 151
         } else {
-            return VIEW_TYPE_ITEM; // Outros elementos
+            return VIEW_TYPE_ITEM;
         }
     }
 
