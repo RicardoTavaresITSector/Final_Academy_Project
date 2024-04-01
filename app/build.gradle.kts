@@ -50,6 +50,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.robolectric:robolectric:4.5.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
@@ -61,6 +62,8 @@ dependencies {
     testImplementation("com.jraska.livedata:testing-ktx:1.2.0")
     testImplementation("org.mockito:mockito-core:4.0.0")
     testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.robolectric:robolectric:4.5.1")
+    testImplementation("androidx.fragment:fragment-testing:1.6.2")
 
     androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
@@ -72,4 +75,6 @@ dependencies {
     androidTestImplementation("net.bytebuddy:byte-buddy-android:1.11.20")
     androidTestImplementation("androidx.room:room-testing:2.6.1")
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("org.robolectric:robolectric:4.5.1")
+    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
 }

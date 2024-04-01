@@ -49,7 +49,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.TypeViewHolder
         }
     }
 
-    private int getResourceIdForType(String type) {
+    public int getResourceIdForType(String type) {
         switch (type) {
             case "normal":
                 return R.drawable.type_normal;

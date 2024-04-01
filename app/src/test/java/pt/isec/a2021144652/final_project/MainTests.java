@@ -14,15 +14,16 @@ import pt.isec.a2021144652.final_project.utils.ConvertersTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        //utils
+        // Utils
         ConvertersTest.class,
-        // modelos
+        // Retrofit
         ApiServiceTest.class,
+        // Models
         FavoritePokemonTest.class,
         PokemonTest.class,
         PokemonListTest.class,
         PokemonResponseTest.class,
-        // room
+        // Room
         FavoritePokemonDaoTest.class
 })
 

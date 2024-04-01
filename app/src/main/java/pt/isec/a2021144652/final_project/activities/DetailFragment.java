@@ -49,7 +49,7 @@ import pt.isec.a2021144652.final_project.room.AppDatabase;
 
 public class DetailFragment extends Fragment {
     Pokemon auxPokemon;
-    private PokemonViewModel pokemonViewModel;
+    public PokemonViewModel pokemonViewModel;
     ImageView ivFavorite;
     Toolbar detailsToolbar;
     RecyclerView rvTypes;
@@ -108,7 +108,7 @@ public class DetailFragment extends Fragment {
         return view;
     }
 
-    private void loadPokemonDetails(String pokemonId) {
+    public void loadPokemonDetails(String pokemonId) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pokeapi.co/api/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -150,7 +150,7 @@ public class DetailFragment extends Fragment {
         });
     }
 
-    private void verifyIfPokemonIsFavorite(String pokemonId) {
+    public void verifyIfPokemonIsFavorite(String pokemonId) {
         pokemonViewModel.getPokemonById(pokemonId).observe(getViewLifecycleOwner(), pokemon -> {
             if (pokemon != null) {
                 ivFavorite.setColorFilter(getResources().getColor(R.color.Gold));

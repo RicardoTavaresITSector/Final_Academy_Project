@@ -34,7 +34,7 @@ import pt.isec.a2021144652.final_project.room.PokemonViewModel;
 public class FavoriteFragment extends Fragment implements FavoritePokemonsAdapter.ItemClicked {
     Toolbar favotitePokemonsToolbar;
     private PokemonViewModel viewModel;
-    private RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     private FavoritePokemonsAdapter adapter;
 
     public FavoriteFragment() {

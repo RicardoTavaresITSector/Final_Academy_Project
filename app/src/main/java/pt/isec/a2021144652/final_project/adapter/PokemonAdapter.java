@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import pt.isec.a2021144652.final_project.R;
 import pt.isec.a2021144652.final_project.activities.MainFragment;
+import pt.isec.a2021144652.final_project.models.Pokemon;
 import pt.isec.a2021144652.final_project.models.PokemonList;
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder>{
@@ -23,6 +24,10 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     final int VIEW_TYPE_ITEM = 1;
     private ArrayList<PokemonList> pokemons;
     private ItemClicked activity;
+
+    public void onItemClick(int i) {
+        activity.onItemClicked(i);
+    }
 
     public interface ItemClicked {
         void onItemClicked(int position);
@@ -82,6 +87,10 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
                 .into(holder.ivPokemonImage);
         }
 
+    }
+
+    public ArrayList<PokemonList> getElements(){
+        return pokemons;
     }
 
     @Override

@@ -39,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     LinearLayout llInternet;
     Button internetButton;
+    ConnectivityManager connectivityManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +82,13 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    public boolean isOnline() {
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public void setConnectivityManager(ConnectivityManager connectivityManager) {
+        this.connectivityManager = connectivityManager;
     }
 }

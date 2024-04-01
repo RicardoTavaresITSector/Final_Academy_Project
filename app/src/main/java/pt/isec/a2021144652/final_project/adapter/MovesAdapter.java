@@ -47,7 +47,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.MovesViewHol
         }
     }
 
-    private String capitalizeFirstLetter(String str) {
+    public String capitalizeFirstLetter(String str) {
         if (str == null || str.isEmpty()) {
             return str;
         }
