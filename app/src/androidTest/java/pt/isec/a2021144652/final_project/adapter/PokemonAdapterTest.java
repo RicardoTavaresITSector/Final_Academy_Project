@@ -1,5 +1,7 @@
 package pt.isec.a2021144652.final_project.adapter;
 
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,29 +50,16 @@ public class PokemonAdapterTest {
     }
 
     @Test
-    public void testOnBindViewHolder() {
-        //PokemonAdapter.ViewHolder viewHolder = mock(PokemonAdapter.ViewHolder.class);
-        //PokemonAdapter.ViewHolder spyViewHolder = spy(viewHolder);
-        //TextView textView = mock(TextView.class);
-        //spyViewHolder.tvPokemonName = textView;
-
-        //int position = 1;
-        //adapter.onBindViewHolder(spyViewHolder, position);
-
-        //verify(spyViewHolder).tvPokemonName.setText("Bulbasaur");
-
-        //pokemons = new ArrayList<>();
-        //pokemons.add(new PokemonList("Bulbasaur", "https://pokeapi.co/api/v2/pokemon/1/"));
-        //pokemons.add(new PokemonList("Charmander", "https://pokeapi.co/api/v2/pokemon/4/"));
-        //adapter = new PokemonAdapter(context, pokemons);
-        FrameLayout parent = new FrameLayout(ApplicationProvider.getApplicationContext());
-        PokemonAdapter.ViewHolder viewHolder = adapter.onCreateViewHolder(parent, 0);
-        TextView textView = mock(TextView.class);
-        when(viewHolder.tvPokemonName).thenReturn(textView);
-
-        adapter.onBindViewHolder(viewHolder, 0);
-
-        verify(textView).setText("Bulbasaur");
+    public void testOnBindViewHolder() throws Throwable {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                FrameLayout parent = new FrameLayout(ApplicationProvider.getApplicationContext());
+                PokemonAdapter.ViewHolder viewHolder = adapter.onCreateViewHolder(parent, 1);
+                adapter.onBindViewHolder(viewHolder, 0);
+                assertEquals("Bulbasaur", ((TextView) viewHolder.itemView.findViewById(R.id.tvPokemonName)).getText());
+            }
+        });
     }
 
     @Test

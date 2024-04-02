@@ -1,5 +1,7 @@
 package pt.isec.a2021144652.final_project.adapter;
 
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
@@ -9,7 +11,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.test.core.app.ApplicationProvider;
+
+import pt.isec.a2021144652.final_project.R;
 
 public class MovesAdapterTest {
     private MovesAdapter movesAdapter;
@@ -41,5 +48,18 @@ public class MovesAdapterTest {
 
         capitalized = movesAdapter.capitalizeFirstLetter(null);
         assertEquals(null, capitalized);
+    }
+
+    @Test
+    public void testOnBindViewHolder() throws Throwable {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                FrameLayout parent = new FrameLayout(ApplicationProvider.getApplicationContext());
+                MovesAdapter.MovesViewHolder viewHolder = movesAdapter.onCreateViewHolder(parent, 0);
+                movesAdapter.onBindViewHolder(viewHolder, 0);
+                assertEquals("Move1", ((TextView) viewHolder.itemView.findViewById(R.id.tv_pokemon_move)).getText());
+            }
+        });
     }
 }

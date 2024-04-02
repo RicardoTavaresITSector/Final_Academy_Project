@@ -81,7 +81,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         String url = pokemons.get(position).getUrl();
         String[] parts = url.split("/");
         String id = parts[parts.length - 1];
-        String imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";;
+        String imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + id + ".png";
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
                 .into(holder.ivPokemonImage);
