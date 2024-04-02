@@ -69,4 +69,11 @@ public class FavoritePokemonsAdapterTest {
             }
         });
     }
+
+    @Test
+    public void testEmptyContent() {
+        adapter = new FavoritePokemonsAdapter(new ArrayList<>(), viewModel, activity);
+
+        assertEquals(0, adapter.getItemCount());
+    }
 }

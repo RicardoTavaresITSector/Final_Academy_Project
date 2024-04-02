@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -28,6 +29,12 @@ public class MovesAdapterTest {
         moves.add("move1");
         moves.add("move2");
         movesAdapter = new MovesAdapter(moves);
+    }
+
+    @Test
+    public void testEmptyMovesList() {
+        MovesAdapter emptyAdapter = new MovesAdapter(new ArrayList<>());
+        assertEquals(0, emptyAdapter.getItemCount());
     }
 
     @Test
@@ -61,5 +68,12 @@ public class MovesAdapterTest {
                 assertEquals("Move1", ((TextView) viewHolder.itemView.findViewById(R.id.tv_pokemon_move)).getText());
             }
         });
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testOnBindViewHolderInvalidIndex() {
+        FrameLayout parent = new FrameLayout(ApplicationProvider.getApplicationContext());
+        MovesAdapter.MovesViewHolder viewHolder = movesAdapter.onCreateViewHolder(parent, 0);
+        movesAdapter.onBindViewHolder(viewHolder, movesAdapter.getItemCount() + 1);
     }
 }

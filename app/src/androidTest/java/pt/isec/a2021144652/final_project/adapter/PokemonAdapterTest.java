@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,5 +68,10 @@ public class PokemonAdapterTest {
         adapter.onItemClick(0);
 
         verify(context).onItemClicked(0);
+    }
+
+    @Test
+    public void testItemViewType() {
+        assertEquals(1, adapter.getItemViewType(20));
     }
 }

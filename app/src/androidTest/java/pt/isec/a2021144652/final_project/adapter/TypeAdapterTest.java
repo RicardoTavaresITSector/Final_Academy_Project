@@ -1,10 +1,13 @@
 package pt.isec.a2021144652.final_project.adapter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.junit.Before;
@@ -50,5 +53,11 @@ public class TypeAdapterTest {
         typeAdapter.onBindViewHolder(spyViewHolder, position);
 
         verify(spyViewHolder).ivType.setImageResource(R.drawable.type_normal);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testOnBindViewHolderInvalidPosition() {
+        TypeAdapter.TypeViewHolder viewHolder = mock(TypeAdapter.TypeViewHolder.class);
+        typeAdapter.onBindViewHolder(viewHolder, typeAdapter.getItemCount() + 1);
     }
 }
